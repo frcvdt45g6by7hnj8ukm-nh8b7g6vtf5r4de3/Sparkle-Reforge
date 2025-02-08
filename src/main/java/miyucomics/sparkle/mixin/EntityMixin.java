@@ -3,7 +3,6 @@ package miyucomics.sparkle.mixin;
 import miyucomics.sparkle.Sparkle;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +13,7 @@ import java.util.Random;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-	protected Random random;
+	protected Random random = new Random();
 	@Shadow public abstract Level level();
 	@Shadow public abstract double getX();
 	@Shadow public abstract double getY();
