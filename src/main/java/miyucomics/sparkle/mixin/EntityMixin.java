@@ -24,11 +24,18 @@ public abstract class EntityMixin {
 	private void addParticles(CallbackInfo info) {
 		if (!level().isClientSide())
 			return;
-		if (Sparkle.SPARKLY_ENTITIES.contains(((Entity) (Object) this).getType()) && RANDOM.nextFloat() < 0.1F) {
-			double positionX = (getX() - 0.5D) + RANDOM.nextDouble();
-			double positionY = (getY() - 0.5D) + RANDOM.nextDouble();
-			double positionZ = (getZ() - 0.5D) + RANDOM.nextDouble();
-			level().addParticle(Sparkle.SPARKLE_PARTICLE.get(), positionX, positionY, positionZ, 0, 0, 0);
+		
+		if (Sparkle.SPARKLE_PARTICLE == null || Sparkle.SPARKLY_ENTITIES == null)
+			return;
+			
+		try {
+			if (Sparkle.SPARKLY_ENTITIES.contains(((Entity) (Object) this).getType()) && RANDOM.nextFloat() < 0.1F) {
+				double positionX = (getX() - 0.5D) + RANDOM.nextDouble();
+				double positionY = (getY() - 0.5D) + RANDOM.nextDouble();
+				double positionZ = (getZ() - 0.5D) + RANDOM.nextDouble();
+				level().addParticle(Sparkle.SPARKLE_PARTICLE.get(), positionX, positionY, positionZ, 0, 0, 0);
+			}
+		} catch (Exception e) {
 		}
 	}
 }

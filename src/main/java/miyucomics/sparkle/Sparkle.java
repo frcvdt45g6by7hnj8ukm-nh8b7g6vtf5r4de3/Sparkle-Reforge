@@ -11,11 +11,13 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mod(Sparkle.MOD_ID)
@@ -30,14 +32,25 @@ public class Sparkle {
 
     public static SparkleConfig CONFIG = SparkleConfig.of(MOD_ID);
 
-    public static List<Block> SPARKLY_BLOCKS;
-    public static List<Item> SPARKLY_ITEMS;
-    public static List<? extends EntityType<?>> SPARKLY_ENTITIES;
+    public static List<Block> SPARKLY_BLOCKS = new ArrayList<>();
+    public static List<Item> SPARKLY_ITEMS = new ArrayList<>();
+    public static List<? extends EntityType<?>> SPARKLY_ENTITIES = new ArrayList<>();
 
     public Sparkle() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        PARTICLE_TYPES.register(modEventBus);  // 添加这一行来注册粒子
-
+        PARTICLE_TYPES.register(modEventBus);
+        
+        modEventBus.addListener(this::setup);
+    }
+    
+    private void setup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            loadConfigLists();
+        });
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void loadConfigLists() {
         SPARKLY_BLOCKS = CONFIG.blocks.stream()
                 .filter(string -> string != null && !string.isEmpty())
                 .map(thing -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(thing)))
